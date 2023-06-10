@@ -16,12 +16,35 @@ export function newPostAdded(postId: string) {
     postComments[postId] = [];
 }
 
+export function getComments(postId: string) {
+    return postComments[postId] || [];
+}
+
 const PORT = process.env.PORT || 3001;
 
 app.get('/comments', (req, res) => {
     return res.status(200).json({
         data: postComments,
         total: Object.keys(postComments).length,
+    });
+});
+
+app.post('/comments', (req, res) => {
+    const { postId, comment } = req.body;
+    if (!postId || !comment) {
+        return res.status(400).json({
+            message: 'Please provide a valid postId and comment',
+        });
+    }
+    if (!postComments[postId]) {
+        return res.status(404).json({
+            error: 'Post not found',
+        });
+    }
+    postComments[postId].push(comment);
+    return res.status(201).json({
+        message: 'Comment added successfully!',
+        success: true,
     });
 });
 

@@ -18,8 +18,15 @@ const { commentsProto, postsProto } = grpc.loadPackageDefinition(
     packageDefinitions,
 ) as any;
 
+const COMMENT_SERVICE_URL = process.env.COMMENT_SERVICE_URL || 'localhost:5001';
+
 export const grpcPostsClient = new postsProto.PostsService(
-    'localhost:5001',
+    COMMENT_SERVICE_URL,
+    grpc.credentials.createInsecure(),
+);
+
+export const grpcCommentsClient = new commentsProto.CommentsService(
+    COMMENT_SERVICE_URL,
     grpc.credentials.createInsecure(),
 );
 

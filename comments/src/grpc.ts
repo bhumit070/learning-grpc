@@ -1,6 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
-import { newPostAdded } from '.';
+import { getComments, newPostAdded } from '.';
 
 const protoOptions = {
     keepCase: true,
@@ -32,7 +32,16 @@ server.addService(postsProto.PostsService.service, {
     },
 });
 
-const commentsService = new commentsProto.CommentsService(
+server.addService(commentsProto.CommentsService.service, {
+    GetComments: function (call: any, callback: Function) {
+        const { postId } = call.request;
+        const comments = getComments(postId);
+        console.log(comments);
+        callback(null, { comments });
+    },
+});
+
+export const commentsService = new commentsProto.CommentsService(
     'localhost:5000',
     grpc.credentials.createInsecure(),
 );
