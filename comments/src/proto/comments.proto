@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package commentsProto;
+
+message Comments {
+	string postId = 1;
+	repeated string comments = 2;
+}
+
+
+service CommentsService {
+	rpc GetComments(Comments) returns (Comments) {};
+}
+
